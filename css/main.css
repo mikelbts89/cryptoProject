@@ -1,0 +1,17 @@
+body {
+    /* The image used */
+    background-image: url(/img/Wallpaper\ abstract\,\ artwork\,\ dark\,\ colorful\,\ 4K\,\ Abstract\ 336191315.jpg);
+    /* Set a specific height */
+    height: 100%;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.card {
+    margin: 10px 10px auto auto;
+    display: inline-block;
+}

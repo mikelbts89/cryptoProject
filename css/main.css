@@ -11,7 +11,33 @@ body {
     background-size: cover;
 }
 
+/* .main {
+    display: flex;
+    flex-wrap: wrap;
+} */
+
 .card {
-    margin: 10px 10px auto auto;
+    margin: 0.5rem;
+    width: 250px;
     display: inline-block;
+    vertical-align: top;
+}
+
+.coin_img {
+    height: 3rem;
+    width: 3rem;
+}
+
+.switch {
+    float: right;
+}
+
+.show {
+    position: relative;
+    right: 10px;
+}
+
+.collapsing {
+    position: relative;
+    right: 10px;
 }

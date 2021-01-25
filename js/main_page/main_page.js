@@ -7,10 +7,19 @@ const loaderRoller = `<div class="lds-roller"><div></div><div></div><div></div><
 const myStorage = window.localStorage
 mainDiv.append(loaderRing)
 
+const saveToLocalStorage = () => {
+    myStorage.setItem("coinName", JSON.stringify(toogledCoinsName))
+    myStorage.setItem("toogled", JSON.stringify(checkedCoins))
+}
+
+
+
 if (myStorage.getItem("toogled") !== null) {
     checkedCoins = JSON.parse(myStorage.getItem("toogled"))
     toogledCoinsName = JSON.parse(myStorage.getItem("coinName"))
 }
+
+
 
 if (myStorage.getItem("coins") !== null) {
     savedCoins = JSON.parse(myStorage.getItem("coins"))
@@ -62,6 +71,12 @@ function getDetails(coinsArr) {
     }
 }
 
+
+
+
+////////////////////////////////// Card //////////////////////////////////////////
+
+
 const drawCard = (name, id) => {
     mainDiv.append(`<div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -90,21 +105,15 @@ const drawCard = (name, id) => {
         }
         if (checkbox.checked && checkedCoins.length < 5) {
             toogledCoinsName.push(checkbox.parentElement.parentElement.children[3].id)
-            console.log(toogledCoinsName)
-            checkedCoins.push(checkbox)
-            console.log(checkedCoins)
-            myStorage.setItem("coinName", JSON.stringify(toogledCoinsName))
-            myStorage.setItem("toogled", JSON.stringify(checkedCoins))
-            
+            checkedCoins.push(checkbox.id)
+            saveToLocalStorage()
+
         } else {
             for (let i = 0; i < checkedCoins.length; i++) {
-                if (checkedCoins[i].id == checkbox.id) {
+                if (checkedCoins[i] == checkbox.id) {
                     checkedCoins.splice(i, 1)
                     toogledCoinsName.splice(i, 1)
-                    console.log(toogledCoinsName)
-                    console.log(checkedCoins)
-                    myStorage.setItem("coinName", JSON.stringify(toogledCoinsName))
-                    myStorage.setItem("toogled", JSON.stringify(checkedCoins))
+                    saveToLocalStorage()
 
                 }
             }

@@ -1,167 +1,180 @@
-const mainDiv = $(".main")
-let checkedCoins = []
-let savedCoins = []
-let toogledCoinsName = []
-const loaderRing = `<div class="lds-dual-ring"></div>`
-const loaderRoller = `<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`
-const myStorage = window.localStorage
-mainDiv.append(loaderRing)
+///////////// main div ////////////////
+
+const mainDiv = $(".main");
+
+//////////// Arrays for local Storage ///////////
+
+let checkedCheckbox = [];
+let savedCoins = [];
+let toogledCoinsData = [];
+
+///////////////// Loaders /////////////////
+
+const loaderRing = `<div class="lds-dual-ring"></div>`;
+const loaderRoller = `<div class="lds-roller"><div></div>
+<div></div><div></div><div></div><div></div><div></div><div>
+</div><div></div></div>`;
+
+////////////// Local Storage ////////////////////
+
+const myStorage = window.localStorage;
 
 const saveToLocalStorage = () => {
-    myStorage.setItem("coinName", JSON.stringify(toogledCoinsName))
-    myStorage.setItem("toogled", JSON.stringify(checkedCoins))
-}
-
-
+  myStorage.setItem("coinName", JSON.stringify(toogledCoinsData));
+  myStorage.setItem("toogled", JSON.stringify(checkedCheckbox));
+};
 
 if (myStorage.getItem("toogled") !== null) {
-    checkedCoins = JSON.parse(myStorage.getItem("toogled"))
-    toogledCoinsName = JSON.parse(myStorage.getItem("coinName"))
+  checkedCheckbox = JSON.parse(myStorage.getItem("toogled"));
+  toogledCoinsData = JSON.parse(myStorage.getItem("coinName"));
 }
-
-
 
 if (myStorage.getItem("coins") !== null) {
-    savedCoins = JSON.parse(myStorage.getItem("coins"))
-    setInterval(() => {
-        myStorage.clear()
-    }, 120000);
-
+  savedCoins = JSON.parse(myStorage.getItem("coins"));
 }
+
+/////////// Starting Loader //////////////
+
+mainDiv.append(loaderRing);
+
+////////////// API Call for all Coins //////////////
 
 async function getContentFromApi() {
-    mainDiv.html("")
-    try {
-        const result = await getCrypto({
-            url: "https://api.coingecko.com/api/v3/coins/?_limit=100",
-        });
-        getDetails(result)
-    } catch (err) {
-        console.log(err);
-    }
+  mainDiv.html("");
+  try {
+    const result = await getCrypto({
+      url: "https://api.coingecko.com/api/v3/coins/?_limit=100",
+    });
+    getDetails(result);
+  } catch (err) {
+    console.log(err);
+  }
 }
+
+//////////// API Call for Searched coin ////////////////
 
 const searchCoin = async () => {
-    let inputVal = $(".me-2").val()
-    if (!inputVal) return
-    mainDiv.html("")
-    try {
-        const currentCoin = await getCrypto({
-            url: `https://api.coingecko.com/api/v3/coins/${inputVal}`
-        });
-        console.log(currentCoin);
-        const coinName = currentCoin.name
+  let inputVal = $(".me-2").val();
+  if (!inputVal) return;
+  mainDiv.html("");
+  try {
+    const currentCoin = await getCrypto({
+      url: `https://api.coingecko.com/api/v3/coins/${inputVal}`,
+    });
 
-        const coinId = currentCoin.id
-        drawCard(coinName, coinId)
-    } catch (err) {
-        console.log(err);
-    }
-}
+    drawCard(currentCoin);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+///////// time out for UI Simulate waiting API request /////////
 
 setTimeout(() => {
-    getContentFromApi()
+  getContentFromApi();
 }, 1000);
 
+////////////// map loop on coins Arr ////////////////
+
 function getDetails(coinsArr) {
-    for (let key in coinsArr) {
-        coinsNameArr = coinsArr[key].name;
-        coinsIDArr = coinsArr[key].id;
-        drawCard(coinsNameArr, coinsIDArr)
-    }
+  coinsArr.map((item) => drawCard(item));
 }
 
+////////////////////////////////// Card Drawing Function //////////////////////////////////////////
 
+const drawCard = (item) => {
+  ////////////// Card ////////////////////
 
-
-////////////////////////////////// Card //////////////////////////////////////////
-
-
-const drawCard = (name, id) => {
-    mainDiv.append(`<div class="card" style="width: 18rem;">
+  mainDiv.append(`<div class="card" style="width: 18rem;">
     <div class="card-body">
     <label class="switch">
-      <input  id="checkbox${id}" type="checkbox">
+      <input id="checkbox${item.id}" 
+   type="checkbox">
       <span class="slider round"></span>
     </label>
-      <h5 class="card-title">${name}</h5>
+      <h5 class="card-title">${item.name}</h5>
       <p>
-      <button id="moreInfo${id}" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${id}" aria-expanded="false" aria-controls="collapseExample">
+      <button id="moreInfo${item.id}" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${item.id}" aria-expanded="false" aria-controls="collapseExample">
        More info
       </button>
     </p>
-    <div class="collapse" id="${id}">
+    <div class="collapse" id="${item.id}">
    
       </div>
     </div>
     </div>
-    </div>`)
+    </div>`);
 
-    let checkbox = document.querySelector(`#checkbox${id}`)
-    checkbox.addEventListener("click", () => {
-        if (checkedCoins.length >= 5) {
-            checkbox.checked = false
+  //////////////// Toggle button /////////////////////
 
+  let checkbox = document.querySelector(`#checkbox${item.id}`);
+  checkbox.addEventListener("click", () => {
+    if (checkedCheckbox.length >= 5) {
+      checkbox.checked = false;
+    }
+    if (checkbox.checked && checkedCheckbox.length < 5) {
+      toogledCoinsData.push(item);
+      checkedCheckbox.push(checkbox.id);
+      saveToLocalStorage();
+    } else {
+      checkedCheckbox.map((item, i) => {
+        if (item == checkbox.id) {
+          checkedCheckbox.splice(i, 1);
+          toogledCoinsData.splice(i, 1);
+          saveToLocalStorage();
         }
-        if (checkbox.checked && checkedCoins.length < 5) {
-            toogledCoinsName.push(checkbox.parentElement.parentElement.children[3].id)
-            checkedCoins.push(checkbox.id)
-            saveToLocalStorage()
+      });
+    }
+  });
+  toogledCoinsData.map((name) => {
+    if (item.id == name.id) {
+      checkbox.checked = true;
+    }
+  });
 
-        } else {
-            for (let i = 0; i < checkedCoins.length; i++) {
-                if (checkedCoins[i] == checkbox.id) {
-                    checkedCoins.splice(i, 1)
-                    toogledCoinsName.splice(i, 1)
-                    saveToLocalStorage()
+  ////////////////// More Info Button //////////////////
 
-                }
-            }
-        }
-    })
-
-    let moreInfoDiv = document.querySelector(`#${id}`)
-    moreInfoDiv.addEventListener("shown.bs.collapse", async (e) => {
-        moreInfoDiv.innerHTML = loaderRoller
-        let checker12 = savedCoins.find(coin => {
-            if (coin.id === e.target.id) {
-                return true
-            } else {
-                return false
-            }
-        })
-        if (checker12) {
-            let currentCoin = savedCoins.find(coin => coin.id === e.target.id)
-            moreInfoDiv.innerHTML = `<div class="card card-body">
+  let moreInfoDiv = document.querySelector(`#${item.id}`);
+  moreInfoDiv.addEventListener("shown.bs.collapse", async (e) => {
+    moreInfoDiv.innerHTML = loaderRoller;
+    let checkIfDataSavedinLocal = savedCoins.find((coin) => {
+      if (coin.id === e.target.id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (checkIfDataSavedinLocal) {
+      let currentCoin = savedCoins.find((coin) => coin.id === e.target.id);
+      moreInfoDiv.innerHTML = `<div class="card card-body">
             <img class="coin_img" src=${currentCoin.image.small}>
             <p> Current Price :</br>${currentCoin.market_data.current_price.ils} ₪
             </br> ${currentCoin.market_data.current_price.eur} €
             </br> ${currentCoin.market_data.current_price.usd} $</p>
-            </div>`
-        } else {
-            setTimeout(async () => {
-                try {
-                    const coinMoreInfo = await getCrypto({
-                        url: `https://api.coingecko.com/api/v3/coins/${e.target.id}`
-                    });
-                    coinMoreInfo.currentTime = Date.parse(new Date())
-                    savedCoins.push(coinMoreInfo)
-                    myStorage.setItem("coins", JSON.stringify(savedCoins))
-                    moreInfoDiv.innerHTML = `<div class="card card-body">
+            </div>`;
+    } else {
+      setTimeout(async () => {
+        // time out for UI Simulate waiting API request //
+        try {
+          const coinMoreInfo = await getCrypto({
+            url: `https://api.coingecko.com/api/v3/coins/${e.target.id}`,
+          });
+          savedCoins.push(coinMoreInfo);
+          myStorage.setItem("coins", JSON.stringify(savedCoins));
+          setTimeout(() => {
+            savedCoins.splice(coinMoreInfo, 1);
+            myStorage.setItem("coins", JSON.stringify(savedCoins));
+          }, 120000);
+          moreInfoDiv.innerHTML = `<div class="card card-body">
               <img class="coin_img" src=${coinMoreInfo.image.small}>
               <p> Current Price :</br>${coinMoreInfo.market_data.current_price.ils} ₪
               </br> ${coinMoreInfo.market_data.current_price.eur} €
               </br> ${coinMoreInfo.market_data.current_price.usd} $</p>
-              </div>`
-                } catch (err) {
-                    console.log(err)
-                }
-
-
-            }, 1000);
+              </div>`;
+        } catch (err) {
+          console.log(err);
         }
-
-
-    })
-
-}
+      }, 1000);
+    }
+  });
+};

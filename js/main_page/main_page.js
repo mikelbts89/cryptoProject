@@ -108,11 +108,12 @@ const drawCard = (item) => {
   //////////////// Toggle button /////////////////////
 
   let checkbox = document.querySelector(`#checkbox${item.id}`);
-  checkbox.addEventListener("click", () => {
-    if (checkedCheckbox.length >= 5) {
+  checkbox.addEventListener("change", () => {
+    if (checkedCheckbox.length > 4) {
+      alert("you can choose no more than 5 coins");
       checkbox.checked = false;
     }
-    if (checkbox.checked && checkedCheckbox.length < 5) {
+    if (checkbox.checked) {
       toogledCoinsData.push(item);
       checkedCheckbox.push(checkbox.id);
       saveToLocalStorage();
@@ -125,6 +126,15 @@ const drawCard = (item) => {
         }
       });
     }
+
+    console.log(
+      "🚀 ~ file: main_page.js ~ line 162 ~ checkedCheckbox.map ~ toogledCoinsData",
+      toogledCoinsData,
+    );
+    console.log(
+      "🚀 ~ file: main_page.js ~ line 166 ~ checkedCheckbox.map ~ checkedCheckbox",
+      checkedCheckbox,
+    );
   });
   toogledCoinsData.map((name) => {
     if (item.id == name.id) {

@@ -1,7 +1,12 @@
-async function displayAboutPage() {
+async function displayLiveReportPage() {
+  $(".navbar-collapse").removeClass("show");
   if (toogledCoinsData.length === 0) {
     alert("you need to toggle one or more coins");
   } else {
+    mainDiv.html("");
+    mainDiv.html(
+      `    <div id="chartContainer" style="height: 40rem; width: 100%;"></div>`,
+    );
     $(".navbar").collapse("hide");
     getCoinsData();
     liveCoinsReport();
@@ -21,10 +26,6 @@ const getCoinsData = async () => {
 };
 
 const liveCoinsReport = () => {
-  mainDiv.html("");
-  mainDiv.html(
-    `    <div id="chartContainer" style="height: 40rem; width: 100%;"></div>`,
-  );
   var options = {
     exportEnabled: true,
     animationEnabled: true,
@@ -62,6 +63,7 @@ const liveCoinsReport = () => {
     },
     data: [],
   };
+
   for (let i = 0; i < toogledCoinsData.length; i++) {
     options.data.push({
       type: "spline",
@@ -86,7 +88,6 @@ const liveCoinsReport = () => {
       let myCoin = options.data[i].dataPoints;
       myCoin.push({ y: coinsDataArray[i], label: currentTime });
     }
-
     $("#chartContainer").CanvasJSChart(options);
   }, 2000);
 

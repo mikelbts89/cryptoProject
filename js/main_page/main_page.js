@@ -54,6 +54,7 @@ async function getContentFromApi() {
 //////////// API Call for Searched coin ////////////////
 
 const searchCoin = async () => {
+  $(".navbar-collapse").removeClass("show");
   let inputVal = $(".me-2").val();
   if (!inputVal) return;
   mainDiv.html("");
@@ -109,10 +110,10 @@ const drawCard = (item) => {
 
   let checkbox = document.querySelector(`#checkbox${item.id}`);
   checkbox.addEventListener("change", () => {
-    if (checkedCheckbox.length > 4) {
-      alert("you can choose no more than 5 coins");
-      checkbox.checked = false;
-    }
+     if (checkedCheckbox.length > 4) {
+       alert("you can choose no more than 5 coins");
+       checkbox.checked = false;
+     }
     if (checkbox.checked) {
       toogledCoinsData.push(item);
       checkedCheckbox.push(checkbox.id);
@@ -126,15 +127,6 @@ const drawCard = (item) => {
         }
       });
     }
-
-    console.log(
-      "🚀 ~ file: main_page.js ~ line 162 ~ checkedCheckbox.map ~ toogledCoinsData",
-      toogledCoinsData,
-    );
-    console.log(
-      "🚀 ~ file: main_page.js ~ line 166 ~ checkedCheckbox.map ~ checkedCheckbox",
-      checkedCheckbox,
-    );
   });
   toogledCoinsData.map((name) => {
     if (item.id == name.id) {
@@ -174,7 +166,7 @@ const drawCard = (item) => {
           setTimeout(() => {
             savedCoins.splice(coinMoreInfo, 1);
             myStorage.setItem("coins", JSON.stringify(savedCoins));
-          }, 120000);
+          }, 60000);
           moreInfoDiv.innerHTML = `<div class="card card-body">
               <img class="coin_img" src=${coinMoreInfo.image.small}>
               <p> Current Price :</br>${coinMoreInfo.market_data.current_price.ils} ₪

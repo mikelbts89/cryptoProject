@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./css/main.css" />
     <link rel="stylesheet" href="./css/toggle.css" />
     <link rel="stylesheet" href="./css/live_report.css" />
+    <link rel="stylesheet" href="./css/about.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap"
       rel="stylesheet"
@@ -60,7 +61,7 @@
                   class="nav-link active"
                   aria-current="page"
                   href="#"
-                  onclick="displayAboutPage()"
+                  onclick="displayLiveReportPage()"
                   >Live reports</a
                 >
               </li>
@@ -69,23 +70,27 @@
                   class="nav-link active"
                   aria-current="page"
                   href="#"
-                  onclick=""
+                  onclick="aboutMe()"
                   >About</a
                 >
               </li>
+              <li>
+                <div class="search_div">
+                  <input
+                    class="form-control me-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                  />
+                  <button
+                    onclick="searchCoin()"
+                    class="btn btn-outline-success"
+                  >
+                    Search
+                  </button>
+                </div>
+              </li>
             </ul>
-
-            <div class="search_div">
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button onclick="searchCoin()" class="btn btn-outline-success">
-                Search
-              </button>
-            </div>
           </div>
         </div>
       </nav>
@@ -106,7 +111,8 @@
     ></script>
     <script src="./js/ajax.js"></script>
     <script src="./js/main_page/main_page.js"></script>
-    <script src="./js/about_page/about.js"></script>
+    <script src="./js/livereport/livereport.js"></script>
+    <script src="./js/about/about.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"

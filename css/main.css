@@ -14,13 +14,11 @@ body {
   display: flex;
 }
 .main {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  text-align: center;
 }
-
 .card {
-  height: 150px;
+  text-align: start;
+  min-height: 8rem;
   margin: 0.5rem;
   width: 250px;
   display: inline-block;
@@ -45,3 +43,4 @@ body {
   position: relative;
   right: 10px;
 }
+
